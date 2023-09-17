@@ -7,7 +7,6 @@ import com.haif.haifojjudgeservice.judege.codesandbox.CodeSandbox;
 import com.haif.haifojjudgeservice.judege.codesandbox.CodeSandboxFactory;
 import com.haif.haifojjudgeservice.judege.codesandbox.CodeSandboxProxy;
 import com.haif.haifojjudgeservice.judege.strategy.JudgeContetxt;
-import com.haif.haifojjudgeservice.judege.strategy.JudgeManager;
 import com.haif.haifojmodel.model.codesandbox.ExecuteCodeRequest;
 import com.haif.haifojmodel.model.codesandbox.ExecuteCodeResponse;
 import com.haif.haifojmodel.model.codesandbox.JudgeInfo;
@@ -16,8 +15,7 @@ import com.haif.haifojmodel.model.entity.Question;
 import com.haif.haifojmodel.model.entity.QuestionSubmit;
 import com.haif.haifojmodel.model.enums.JudgeInfoMessageEnum;
 import com.haif.haifojmodel.model.enums.QuestionSubmitStatusEnum;
-import com.haif.haifojserviceclient.service.QuestionService;
-import com.haif.haifojserviceclient.service.QuestionSubmitService;
+import com.haif.haifojserviceclient.service.QuestionFeignClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -29,11 +27,11 @@ import java.util.stream.Collectors;
 public class JudgeServiceImpl implements JudgeService {
 
     @Resource
-    QuestionService questionService;
-    @Resource
-    QuestionSubmitService questionSubmitService;
+    QuestionFeignClient questionFeignClient;
+
     @Resource
     JudgeManager judgeManager;
+
 
     @Value("${codesandbox.type:example}")
     private String type;
@@ -42,12 +40,12 @@ public class JudgeServiceImpl implements JudgeService {
     @Override
     public QuestionSubmit doJudge(long questionSubmitId) {
         // 1）传入题目的提交 id，获取到对应的题目、提交信息（包含代码、编程语言等）
-        QuestionSubmit questionSubmit = questionSubmitService.getById(questionSubmitId);
+        QuestionSubmit questionSubmit = questionFeignClient.getQuestionSubmitById(questionSubmitId);
         if (questionSubmit == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "提交信息不存在");
         }
         Long questionId = questionSubmit.getQuestionId();
-        Question question = questionService.getById(questionId);
+        Question question = questionFeignClient.getQuestionById(questionId);
         if (question == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "题目不存在");
         }
@@ -59,7 +57,7 @@ public class JudgeServiceImpl implements JudgeService {
         QuestionSubmit questionSubmitUpdate = new QuestionSubmit();
         questionSubmitUpdate.setId(questionSubmitId);
         questionSubmitUpdate.setStatus(QuestionSubmitStatusEnum.RUNNING.getValue());
-        boolean update = questionSubmitService.updateById(questionSubmitUpdate);
+        boolean update = questionFeignClient.updateQuestionSubmitById(questionSubmitUpdate);
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "正在判题中");
         }
@@ -78,7 +76,7 @@ public class JudgeServiceImpl implements JudgeService {
                 .language(language)
                 .inputList(inputList)
                 .build();
-        // 获取代码沙箱输出结果
+        // 获取代码沙箱输出结果 通过代理类增强执行方法
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
         // 5）根据沙箱的执行结果，设置题目的判题状态和信息
         JudgeContetxt judgeContetxt = new JudgeContetxt();
@@ -99,10 +97,10 @@ public class JudgeServiceImpl implements JudgeService {
         } else {
             questionSubmitUpdate.setStatus(QuestionSubmitStatusEnum.FAILED.getValue());
         }
-        update = questionSubmitService.updateById(questionSubmitUpdate);
+        update = questionFeignClient.updateQuestionSubmitById(questionSubmitUpdate);
         if (!update) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目状态更新错误");
         }
-        return questionSubmitService.getById(questionSubmitId);
+        return questionFeignClient.getQuestionSubmitById(questionSubmitId);
     }
 }

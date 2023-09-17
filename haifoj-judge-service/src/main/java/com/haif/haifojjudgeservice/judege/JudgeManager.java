@@ -1,5 +1,9 @@
-package com.haif.haifojjudgeservice.judege.strategy;
+package com.haif.haifojjudgeservice.judege;
 
+import com.haif.haifojjudgeservice.judege.strategy.DefaultJudgeStrategy;
+import com.haif.haifojjudgeservice.judege.strategy.JavaLanguageJudgeStrategy;
+import com.haif.haifojjudgeservice.judege.strategy.JudgeContetxt;
+import com.haif.haifojjudgeservice.judege.strategy.JudgeStrategy;
 import com.haif.haifojmodel.model.codesandbox.JudgeInfo;
 import com.haif.haifojmodel.model.entity.QuestionSubmit;
 import org.springframework.stereotype.Service;

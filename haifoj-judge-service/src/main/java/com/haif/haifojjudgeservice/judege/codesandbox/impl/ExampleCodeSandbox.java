@@ -20,6 +20,7 @@ public class ExampleCodeSandbox implements CodeSandbox {
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         List<String> inputList = executeCodeRequest.getInputList();
         ExecuteCodeResponse executeCodeResponse = new ExecuteCodeResponse();
+        // todo 这里输入和输出一样，并没有获取结果，所以执行会失败
         executeCodeResponse.setOutputList(inputList);
         executeCodeResponse.setMessage("测试执行成功");
         executeCodeResponse.setStatus(QuestionSubmitStatusEnum.SUCCEED.getValue());

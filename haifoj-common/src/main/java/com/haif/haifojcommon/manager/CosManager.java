@@ -1,6 +1,10 @@
 //package com.haif.haifojcommon.manager;
 //
 //
+//import com.haif.haifojcommon.config.CosClientConfig;
+//import com.qcloud.cos.COSClient;
+//import com.qcloud.cos.model.PutObjectRequest;
+//import com.qcloud.cos.model.PutObjectResult;
 //import org.springframework.stereotype.Component;
 //
 //import javax.annotation.Resource;

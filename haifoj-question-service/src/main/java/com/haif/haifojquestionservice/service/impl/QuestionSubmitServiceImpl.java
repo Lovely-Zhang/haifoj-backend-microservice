@@ -21,10 +21,11 @@ import com.haif.haifojmodel.model.vo.QuestionSubmitVO;
 import com.haif.haifojmodel.model.vo.QuestionVO;
 import com.haif.haifojmodel.model.vo.UserVO;
 import com.haif.haifojquestionservice.mapper.QuestionSubmitMapper;
+import com.haif.haifojquestionservice.rabbitmq.MyMessageProducer;
 import com.haif.haifojquestionservice.service.QuestionService;
 import com.haif.haifojquestionservice.service.QuestionSubmitService;
-import com.haif.haifojserviceclient.service.JudgeService;
-import com.haif.haifojserviceclient.service.UserService;
+import com.haif.haifojserviceclient.service.JudgeFeignClient;
+import com.haif.haifojserviceclient.service.UserFeignClient;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Lazy;
@@ -48,10 +49,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     private QuestionService questionService;
     @Resource
-    private UserService userService;
+    private UserFeignClient userFeignClient;
     @Resource
     @Lazy
-    private JudgeService judgeService;
+    private JudgeFeignClient judgeFeignClient;
+    @Resource
+    private MyMessageProducer myMessageProducer;
 
     /**
      * 题目提交
@@ -97,15 +100,17 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         serviceById.setSubmitNum(serviceById.getSubmitNum() + 1);
         questionService.updateById(serviceById);
         Long questionSubmitId = questionSubmit.getId();
+        // 发送消息
+        myMessageProducer.sendMessage("code_exchange","my_routingKey", String.valueOf(questionSubmitId));
         // 执行判题服务
-        CompletableFuture.runAsync(() -> {
-            QuestionSubmit doJudge = judgeService.doJudge(questionSubmitId);
-            if (doJudge.getStatus() == 2) {
-                // todo 如果运行成功通过，则把题目的通过数 +1
-                serviceById.setAcceptedNum(serviceById.getAcceptedNum() + 1);
-                questionService.updateById(serviceById);
-            }
-        });
+//        CompletableFuture.runAsync(() -> {
+//            QuestionSubmit doJudge = judgeFeignClient.doJudge(questionSubmitId);
+//            if (doJudge.getStatus() == 2) {
+//                // todo 如果运行成功通过，则把题目的通过数 +1
+//                serviceById.setAcceptedNum(serviceById.getAcceptedNum() + 1);
+//                questionService.updateById(serviceById);
+//            }
+//        });
         return questionSubmitId;
     }
 
@@ -147,10 +152,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         // 关联查询用户信息
         Long userId = questionSubmit.getUserId();
         // 脱敏 既不是管管理员，又不是本人 不能看代码
-        if (userId != loginUser.getId() && !userService.isAdmin(loginUser)) {
+        if (userId != loginUser.getId() && !userFeignClient.isAdmin(loginUser)) {
             questionSubmitVO.setCode(null);
         }
-        UserVO userVO = userService.getUserVO(loginUser);
+        UserVO userVO = userFeignClient.getUserVO(loginUser);
         questionSubmitVO.setUserVO(userVO);
         return questionSubmitVO;
     }

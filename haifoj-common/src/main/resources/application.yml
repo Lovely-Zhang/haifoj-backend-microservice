@@ -1,0 +1,8 @@
+# 对象存储
+# todo 需替换配置
+cos:
+  client:
+    accessKey: AKID0qSpxpSpxykHYaNvDG4cvznQq31ztb8T
+    secretKey: INDrIXaZOyJOHyQcZGiusa3GExQedQ0M
+    region: 1256524210
+    bucket: xingqiu-tuchuang-1256524210
