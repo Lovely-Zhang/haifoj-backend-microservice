@@ -1,0 +1,33 @@
+# 测试配置文件
+spring:
+  # 数据库配置
+  # todo 需替换配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.211.55.7:3306/haif_oj
+    username: haif
+    password: m_969963161
+  # Redis 配置
+  # todo 需替换配置
+  redis:
+    database: 1
+    host: 10.211.55.7
+    port: 6379
+    timeout: 5000
+    password: r_969963161
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 10.211.55.7:8848
+  rabbitmq:
+    host: 10.211.55.7
+    port: 5672
+    password: guest
+    username: guest
+
+# Elasticsearch 配置
+# todo 需替换配置
+#elasticsearch:
+#  uris: http://10.211.55.7:9200
+#  username: root
+#  password: 123456
