@@ -1,7 +1,0 @@
-# 测试配置文件
-spring:
-  cloud:
-    nacos:
-      discovery:
-        # docker 容器 启动的 nacos，需要找到docker分配给nacos的ip，不能用服务器的ip
-        server-addr: 10.211.55.7:8848

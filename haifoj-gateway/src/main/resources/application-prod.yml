@@ -1,7 +1,6 @@
-# 线上配置文件
+# 生产环境配置文件
 spring:
   cloud:
     nacos:
       discovery:
-        # docker 容器 启动的 nacos，需要找到docker分配给nacos的ip，不能用服务器的ip
-        server-addr: 172.17.0.4:8848
+        server-addr: nacos:8848

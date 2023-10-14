@@ -18,9 +18,9 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 8.134.24.194:8848
+        server-addr: nacos:8848
   rabbitmq:
-    host: 8.134.24.194
+    host: rabbitmq
     port: 5672
     password: guest
     username: guest

@@ -6,11 +6,11 @@ spring:
     name: haifoj-gateway
     # 默认 dev 环境
   profiles:
-    #    active: dev
-    #    active: test
-    active: prod
+    active: dev
+#    active: prod
   main:
     web-application-type: reactive
+  cloud:
     gateway:
       routes:
         - id: haifoj-judge-service

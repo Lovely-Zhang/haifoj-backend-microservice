@@ -19,12 +19,12 @@ spring:
     nacos:
       discovery:
         # docker 容器 启动的 nacos，需要找到docker分配给nacos的ip，不能用服务器的ip
-        server-addr: 172.17.0.4:8848
-  rabbitmq:
-    host: 8.134.24.194
-    port: 5672
-    password: guest
-    username: guest
+        server-addr: nacos:8848
+#  rabbitmq:
+#    host: 8.134.24.194
+#    port: 5672
+#    password: guest
+#    username: guest
 
 # Elasticsearch 配置
 # todo 需替换配置

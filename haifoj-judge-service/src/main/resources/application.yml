@@ -4,9 +4,8 @@ spring:
     name: haifoj-judge-service
   # 默认 dev 环境
   profiles:
-#    active: dev
-#    active: test
-    active: prod
+    active: dev
+#    active: prod
   # 支持 swagger3
   mvc:
     pathmatch:
