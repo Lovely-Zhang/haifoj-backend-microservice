@@ -1,0 +1,54 @@
+version: '3'
+services:
+  haifoj-gateway:
+    container_name: haifoj-gateway
+    build:
+      context: ./haifoj-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "8101:8101"
+    networks:
+      - mynetwork
+
+  haifoj-user-service:
+    container_name: haifoj-user-service
+    build:
+      context: ./haifoj-user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8102:8102"
+    networks:
+      - mynetwork
+    depends_on:
+      - haifoj-gateway
+
+  haifoj-question-service:
+    container_name: haifoj-question-service
+    build:
+      context: ./haifoj-question-service
+      dockerfile: Dockerfile
+    ports:
+      - "8103:8103"
+    networks:
+      - mynetwork
+    depends_on:
+      - haifoj-user-service
+      - haifoj-gateway
+
+  haifoj-judge-service:
+    container_name: haifoj-judge-service
+    build:
+      context: ./haifoj-judge-service
+      dockerfile: Dockerfile
+    ports:
+      - "8104:8104"
+    networks:
+      - mynetwork
+    depends_on:
+      - haifoj-user-service
+      - haifoj-question-service
+      - haifoj-gateway
+
+# 网络，不定义的话就是默认网络
+networks:
+  mynetwork:

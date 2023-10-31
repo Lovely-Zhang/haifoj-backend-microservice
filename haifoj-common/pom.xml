@@ -24,6 +24,20 @@
             <artifactId>cos_api</artifactId>
             <version>5.6.89</version>
         </dependency>
+
+        <!-- aliyun OSS-SDK -->
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.10.2</version>
+        </dependency>
+
+        <!-- Commons Io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
     </dependencies>
 
 </project>
