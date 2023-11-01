@@ -1,27 +1,28 @@
 # 线上配置文件
 spring:
   # 数据库配置
-  # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://8.134.24.194:3306/haif_oj
-    username: haif
-    password: m_969963161
+    url: jdbc:mysql://mysql:13306/haif_oj
+    username: root
+    password: 123456
   # Redis 配置
-  # todo 需替换配置
   redis:
     database: 1
-    host: 8.134.24.194
-    port: 6379
+    host: redis
+    port: 16379
     timeout: 5000
-    password: r_969963161
+    password: 123456
   cloud:
     nacos:
       discovery:
-        server-addr: nacos:8848
+        # docker 容器 启动的 nacos，需要找到docker分配给nacos的ip，不能用服务器的ip
+        server-addr: nacos:18848
+        username: nacos
+        password: nacos
   rabbitmq:
     host: rabbitmq
-    port: 5672
+    port: 56720
     password: guest
     username: guest
 
